@@ -3,6 +3,7 @@
     <div>
     <table>
       <tbody>
+      
         <tr> <th colspan="2"><p>Filtros Disponibles</p></th></tr>
         <tr> <th>Ciudad: </th>
         <td> <select v-model="vciudad" required><option value="" disabled selected>Seleccione una Ciudad</option>
@@ -34,7 +35,7 @@
       </tr><tr><th>Tipo de Persona: </th><td><input type="radio" name="persona" value="0" v-model="vpersona">Natural
       <input type="radio" name="persona" value="1" v-model="vpersona">Jurídica</td>
       </tr><tr><td align="center"><button @click.prevent="buscar">Buscar</button></td
-      ><td align="center"> <button @click="limpiaForma">Limpiar</button> </td>
+      ><td align="center"> <button @click.prevent="limpiaForma">Limpiar</button> </td>
       </tr></tbody>
     </table>
     </div>
@@ -43,7 +44,7 @@
         <tbody>
           <tr><td colspan="2"><p>{{titleSugerido}}</p></td></tr>
           <tr v-for="sugeridoU, i in listaSugerido" :key="sugeridoU">
-          <td><img :src="sugeridoU.img" width="200" alt="Img"> <button @click="cotizar(i)">Cotizar</button> </td></tr>
+          <td><img :src="sugeridoU.img" width="200" alt="Img"> <button @click.prevent="cotizar(i)">Cotizar</button> </td></tr>
         </tbody>
       </table>
     </div>
@@ -86,9 +87,10 @@
 
 <script>
 //import {ref} from "veu";
-import SitioService from "@/services/obsitio.js";
-import InmuebleService from "@/services/obinmueble.js";
-import CotizaService from "@/services/obcotiza.js";
+import SitioService from '@/services/obsitio.js';
+import InmuebleService from '@/services/obinmueble.js';
+import CotizaService from '@/services/obcotiza.js';
+import UsuarioService from '@/services/obcliente.js';
 
 export default {
   mounted(){
@@ -102,7 +104,8 @@ export default {
     this.listaDisponible = InmuebleService.obtenerDisponible();
     this.cotiza = CotizaService.obtenerCotizacion();
     this.tarifa = CotizaService.obtenerTarifa();
-
+    this.listaUsuario = UsuarioService.obtenerUsuarios();
+    this.vestado = UsuarioService.obtenerIngresado();
   },
   data(){
     return{
@@ -115,6 +118,8 @@ export default {
       listaServicio: [],
       listaDisponible: [],
       listaSugerido: [],
+      listaUsuario: [],
+      vestado: [],
       cotiza:{},
       tarifa: [],
       encontrado:{
@@ -192,9 +197,16 @@ export default {
       //this.limpiaForma();
     },
     cotizar(pos){
-      let total;
+      console.log(this.vestado);
+      if(this.vestado[0]>=0){
+        let nombre = this.listaUsuario[this.vestado[0]].nombre;
+        let apellido = this.listaUsuario[this.vestado[0]].apellido;
+        let documento = this.listaUsuario[this.vestado[0]].documento;
+        this.cotiza.cliente = nombre + ' '+ apellido + ' ('+ documento + ')';
+      };
+      let total = 0;
       let canon = this.listaDisponible[pos].preciox;
-      this.cotiza.canon = canon;
+      this.cotiza.canon = canon.toFixed(1);
       total = canon;
       let tipoI = this.listaDisponible[pos].tipo;
       this.cotiza.tipo = this.listaTipo[tipoI].nombre;
@@ -204,26 +216,30 @@ export default {
 
       if(this.vpersona==1){
         let iva = this.tarifa[this.vpersona].porcien;
-        this.cotiza.impuestos = canon * iva;
-        this.cotiza.impuestos += (canon * this.tarifa[this.vpersona].mas)* iva;
-        total += this.cotiza.impuestos;
+        let dato = canon * iva;
+        dato += (canon * this.tarifa[this.vpersona].mas)* iva;
+        this.cotiza.impuestos = dato.toFixed(1);
+        total += dato;
       }
       let comision = canon * this.listaTipo[this.listaDisponible[pos].tipo].comision;
-      this.cotiza.comision = comision;
+      this.cotiza.comision = comision.toFixed(1);
       total += comision;
       if (this.vanticipo){
-        this.cotiza.descuentos = canon * 0.1;
+        let anticipo = canon * 0.1;
+        this.cotiza.descuentos = anticipo.toFixed(1);
         total -= this.cotiza.descuentos;
       }
-      if(tipoI >= 0 || this.tipo <= 3){
-        this.cotiza.admon = canon * 0.07;
-       total += this.cotiza.admon;
+      if(tipoI >= 0 || tipoI <= 3){
+        let admon = canon * 0.07
+        this.cotiza.admon = admon.toFixed(1);
+       total += admon;
       }
       if(this.vamoblado){
-        this.cotiza.amoblado = canon * 0.12;
-        total += this.cotiza.amoblado;
+        let amobla = canon * 0.12;
+        this.cotiza.amoblado = amobla.toFixed(1);
+        total += amobla;
      }
-      this.cotiza.total = total;
+      this.cotiza.total = total.toFixed(1);
 
       console.log(this.cotiza);
       this.$router.push('/cotizacion');

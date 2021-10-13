@@ -11,7 +11,8 @@
   <div id="nav">
     <router-link to="/">Inicio</router-link> |
     <router-link to="/about">Registrese</router-link> |
-    <router-link to="/cotizacion">Cotizacion</router-link>
+    <router-link to="/cotizacion">Cotizacion</router-link> |
+    <router-link to="/login">Ingrese</router-link>
   </div>
   <router-view />
 </template>

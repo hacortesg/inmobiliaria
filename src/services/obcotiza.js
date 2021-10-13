@@ -7,7 +7,7 @@ class CotizaService {
     constructor() {
 
         this.cotizacion = {
-            cliente: 'Karen Gomez',
+            cliente: '',
             tipo: '',
             canon: 0,
             servicio: 0,

@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Cotizacion from '../views/Cotizacion.vue'
+import Login from '../views/Login.vue'
+
  
 const routes = [
   {
@@ -20,7 +22,13 @@ const routes = [
     path: '/cotizacion',
     name: 'Cotizacion',
     component: Cotizacion
-  }]
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  }
+]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
