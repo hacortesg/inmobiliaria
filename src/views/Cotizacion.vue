@@ -1,5 +1,6 @@
 <template>
   <section>
+    <form action="#">
     <table>
       <tbody>
         <tr><th colspan="2"><p>Cotización: Persona natural</p></th></tr>
@@ -49,6 +50,7 @@
         </tr>
       </tbody>
     </table>
+    </form>
     <div>
       
     </div>
@@ -103,7 +105,7 @@ export default {
       cotiza: {},
     };
   },
-  name: "Cotiza",
+  name: 'Cotizacion',
   components: {
 
   },

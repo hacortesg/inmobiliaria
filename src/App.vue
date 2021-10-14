@@ -40,9 +40,9 @@
   font-family: "Iceberg", cursive;
   color: white;
   font-size: 1.5rem;
-  list-style: none;
   height: 15vh;
 /*
+  list-style: none;
   text-align: left;
   */
 
@@ -90,8 +90,8 @@ section{
   display: inline-flex;
 }
 
-#htr{
-  max-height: 10vh;
+#th{
+  height: 2rem;
 }
 section p {
     background-color: #EFE8E8;
@@ -123,7 +123,7 @@ section table td {
 section button {
     background-color: #B7A2A1;
     color: white;
-    width: 4rem;
+    width: 4.5rem;
     height: 3rem;
     border-radius: 0.4rem;
 }

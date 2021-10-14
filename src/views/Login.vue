@@ -26,6 +26,40 @@
      </tr>
     </table>
   </section>
+   <!-- --------------------------------INICIO DEL FOOTER------------------------- -->
+
+  <footer id="footer">
+    <div class="contenedor footer-content">
+      <div class="contact-us">
+        <h2 class="brand">Inmobiliaria Candelaria</h2>
+        <p>Somos expertos en la búsqueda del hogar de tus sueños</p>
+
+      </div>
+      <div class="social-media">
+        <a href="./" class="social-media-icon">
+          <i class='bx bxl-facebook'></i>
+        </a>
+        <a href="./" class="social-media-icon">
+          <i class='bx bxl-twitter'></i>
+        </a>
+        <a href="./" class="social-media-icon">
+          <i class='bx bxl-instagram'></i>
+        </a>
+      </div>
+    </div>
+    <div class="line"></div>
+    <div class="pie">
+      <address>
+        <a href="mailto:servicioalcliente@inmobiliariacandelaria.com.co">Contactenos</a>
+      </address>
+      <p>Avenida SiempreViva Bogotá - Colombia
+      </p>
+      &#169; 2021
+      Derechos Reservados
+    </div>
+  </footer>
+
+  <!-- --------------------------------FIN DEL FOOTER------------------------- -->
 
 </template>
 
