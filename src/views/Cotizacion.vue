@@ -45,8 +45,8 @@
           <td>{{cotiza.total}}</td>
         </tr>
         <tr>
-          <td align="center"><button  >Pago en efectivo</button></td>
-          <td align="center"><button >Pago en linea</button></td>
+          <td align="center"><button  @click.prevent="depositoOff">Pago en efectivo</button></td>
+          <td align="center"><button @click.prevent="depositoOn" >Pago en linea</button></td>
         </tr>
       </tbody>
     </table>
@@ -99,6 +99,7 @@ export default {
   mounted() {
     document.title = "Cotización de inmueble";
     this.cotiza = CotizaService.obtenerCotizacion();
+
   },
   data() {
     return {
@@ -109,6 +110,13 @@ export default {
   components: {
 
   },
-  methods: {},
+  methods: {
+    depositoOff(){
+      alert(`Estimad@ cliente: ${this.cotiza.cliente} Por favor realice su deposito en Oficina Banco DaCasa: 212055950`);
+    },
+    depositoOn(){
+      alert(`Estimad@ cliente: ${this.cotiza.cliente} Por favor realice su deposito en Damasplata: 3168784257`);
+    }
+  },
 };
 </script>

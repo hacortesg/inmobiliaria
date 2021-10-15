@@ -6,20 +6,20 @@
       
         <tr> <th colspan="2"><p>Filtros Disponibles</p></th></tr>
         <tr> <th>Ciudad: </th>
-        <td> <select v-model="vciudad" required><option value="" disabled selected>Seleccione una Ciudad</option>
-        <option v-for="ciudadU, i in listaCiudad" :key="i">{{i}}. {{ciudadU.nombre}}</option> </select> </td>
+        <td> <select v-model="vciudad" @change="SCiudad($event)"><option value="" disabled selected>Seleccione una Ciudad</option>
+        <option v-for="ciudadU, i in listaCiudad" :key="i" :value="i">{{i}}. {{ciudadU.nombre}}</option> </select> </td>
         </tr><tr><th>Zona: </th>
-        <td> <select v-model="vzona" > <option value="" disabled selected>Seleccione una Zona</option> 
-        <option v-for="zonaU, i in listaZona" :key="i" >{{i}}. {{zonaU.nombre}}</option> </select> </td>
+        <td> <select v-model="vzona" @change="SZona($event)"> <option value="" disabled selected>Seleccione una Zona</option> 
+        <option v-for="zonaU, i in listaZona" :key="i" :value="i">{{i}}. {{zonaU.nombre}}</option> </select> </td>
         </tr><tr><th>Localidad: </th>
-        <td> <select v-model="vlocalidad"> <option value="" disabled selected>Seleccione una Localidad</option> 
-        <option v-for="localidadU, i in listaLocalidad" :key="i" >{{i}}. {{localidadU.nombre}}</option> </select> </td>
+        <td> <select v-model="vlocalidad" @change="SLocalidad($event)"> <option value="" disabled selected>Seleccione una Localidad</option> 
+        <option v-for="localidadU, i in listaLocalidad" :key="i" :value="i">{{i}}. {{localidadU.nombre}}</option> </select> </td>
         </tr><tr><th>Estrato:</th>
-        <td> <select v-model="vestrato"> <option value="" disabled selected>Seleccione un Estrato</option> 
-        <option v-for="estratoU, i in listaEstrato" :key="i" >{{i}}. {{estratoU.nombre}}</option> </select> </td>
+        <td> <select v-model="vestrato" @change="SEstrato($event)"> <option value="" disabled selected>Seleccione un Estrato</option> 
+        <option v-for="estratoU, i in listaEstrato" :key="i" :value="i">{{i}}. {{estratoU.nombre}}</option> </select> </td>
         </tr><tr><th>Tipo de inmueble: </th>
-        <td> <select v-model="vtipo"> <option value="" disabled selected>Seleccione un Tipo</option> 
-        <option v-for="tipoU, i in listaTipo" :key="i" >{{i}}. {{tipoU.nombre}}</option> </select> </td>
+        <td> <select v-model="vtipo" @change="STipo($event)" > <option value="" disabled selected>Seleccione un Tipo</option> 
+        <option v-for="tipoU, i in listaTipo" :key="i" :value="i">{{i}}. {{tipoU.nombre}}</option> </select> </td>
         </tr><tr><th>Sala:</th><td><input type="checkbox" name="" id="" v-model="vsala">  </td>
         </tr><tr><th>Comedor:</th><td><input type="checkbox" name="" id="" v-model="vcomedor">  </td>
         </tr><tr><th>Cocina:</th><td><input type="checkbox" name="" id="" v-model="vcocina">  </td>
@@ -29,12 +29,12 @@
         </tr><tr><th>Alcoba:</th><td><input type="number" name="" id="" v-model="valcoba"></td>
         </tr><tr><th>Precio Máximo:</th><td><input type="number" name="" id="" v-model="vpreciox"></td>
         </tr><tr><th>Tipo de Servicio: </th>
-        <td> <select v-model="vservicio"> <option value="" disabled selected>Seleccione un servicio</option> 
-        <option v-for="servicioU, i in listaServicio" :key="i" >{{i}}. {{servicioU.nombre}} ${{servicioU.precio}}</option> </select> </td>
+        <td> <select v-model="vservicio" @change="SServicio($event)"> <option value="" disabled selected>Seleccione un servicio</option> 
+        <option v-for="servicioU, i in listaServicio" :key="i" :value="i">{{i}}. {{servicioU.nombre}} ${{servicioU.precio}}</option> </select> </td>
         </tr><tr><th>Anticipo Anual:</th><td><input type="checkbox" name="" id="" v-model="vanticipo">  </td>
       </tr><tr><th>Tipo de Persona: </th><td><input type="radio" name="persona" value="0" v-model="vpersona">Natural
       <input type="radio" name="persona" value="1" v-model="vpersona">Jurídica</td>
-      </tr><tr><td align="center"><button @click.prevent="buscar">Buscar</button></td
+      </tr><tr><td align="center"><button :disable="vbuscar" @click.prevent="buscar">Buscar</button></td
       ><td align="center"> <button @click.prevent="limpiaForma">Limpiar</button> </td>
       </tr></tbody>
     </table>
@@ -44,7 +44,8 @@
         <tbody>
           <tr><td colspan="2"><p>{{titleSugerido}}</p></td></tr>
           <tr v-for="sugeridoU, i in listaSugerido" :key="sugeridoU">
-          <td><img :src="sugeridoU.img" width="200" alt="Img"> <button @click.prevent="cotizar(i)">Cotizar</button> </td></tr>
+          <div><img width="200" :src="sugeridoU.img" :alt="sugeridoU.id">
+          <button @click.prevent="cotizar(i)">Cotizar b{{sugeridoU.img}}b</button> </div></tr>
         </tbody>
       </table>
     </div>
@@ -135,10 +136,10 @@ export default {
         comedor:false,
         cocina:false,
         parqueadero:false,
-        amoblado:false,
         bano: 0,
         alcoba:0,
         preciox: 0,
+        amoblado:false,
         servicio: 0,
         anticipo: false,
         persona:0
@@ -151,14 +152,15 @@ export default {
       vsala:false,
       vcomedor:false,
       vcocina:false,
-      vparquedero:false,
-      vamoblado:false,
+      vparqueadero:false,
       vbano:0,
       valcoba:0,
       vpreciox:0,
+      vamoblado:false,
       vservicio: '',
       vanticipo:false,
-      vpersona: 0
+      vpersona: 0,
+      vbuscar: true
     }
   },
   name: 'Home',
@@ -167,10 +169,10 @@ export default {
   },
   methods: {
     buscar(){
-      this.buscado.ciudad = this.vciudad.substr(0,1);
-      this.buscado.zona = this.vzona.substr(0,1);
-      this.buscado.localidad = this.vlocalidad.substr(0,1);
-      this.buscado.estrato = this.vestrato.substr(0,1);
+      this.buscado.ciudad = parseInt(this.vciudad);
+      this.buscado.zona = parseInt(this.vzona);
+      this.buscado.localidad = parseInt(this.vlocalidad);
+      this.buscado.estrato = parseInt(this.vestrato);
       this.buscado.sala = this.vsala;
       this.buscado.comedor = this.vcomedor;
       this.buscado.cocina = this.vcocina;
@@ -179,22 +181,34 @@ export default {
       this.buscado.bano = this.vbano;
       this.buscado.alcoba = this.valcoba;
       this.buscado.preciox = this.vpreciox;
-      this.buscado.servicio = this.vservicio.substr(0,1);
+      if (this.vservicio == ''){
+        this.vservicio = 0;
+      }
+      this.buscado.servicio = parseInt(this.vservicio);
       this.buscado.anticipo = this.vanticipo;
       this.buscado.persona = this.vpersona;
-      console.log(this.buscado.ciudad + '  -> '+ this.listaDisponible[0].ciudad);
-
-      for(let j = 0; j < this.listaDisponible.length; j++){
-
-        if (this.buscado.ciudad == this.listaDisponible[j].ciudad){
-          this.titleSugerido = 'Inmuebles sugeridos en la lista';
-          this.encontrado.id = j;
-          this.encontrado.img = this.listaDisponible[j].img; //require()
-          this.listaSugerido.push(this.encontrado);
-          console.log('match -> ' + this.listaSugerido[0].img);
+      console.log(this.buscado);
+      
+//      for(let j = 0; j < this.listaDisponible.length; j++){
+      for(let reg of this.listaDisponible){
+        if (this.buscado.ciudad == reg.ciudad || this.buscado.zona == reg.zona ||
+          this.buscado.localidad == reg.localidad || this.buscado.estrato == reg.estrato ||
+          this.buscado.sala == reg.sala || this.buscado.comedor == reg.comedor ||
+          this.buscado.cocina == reg.cocina || this.buscado.parqueadero == reg.parqueadero ||
+          this.buscado.bano == reg.bano || this.buscado.alcoba == reg.alcoba ||
+          this.buscado.preciox >= reg.preciox){
+            this.titleSugerido = 'Inmuebles sugeridos en la lista';
+            this.encontrado.id = reg.id;
+            this.encontrado.img = require(reg.img); //require()
+            this.listaSugerido.push(this.encontrado);
+            this.encontrado = {id:0, img:''};
+            console.log('match -> ' + this.listaSugerido[0].img);
         }
+            console.log(reg);
       }
-      //this.limpiaForma();
+      if(this.listaSugerido!=null){
+      this.vbuscar = false;
+      }
     },
     cotizar(pos){
       console.log(this.vestado);
@@ -242,9 +256,11 @@ export default {
       this.cotiza.total = total.toFixed(1);
 
       console.log(this.cotiza);
+      this.vbuscar = true;
       this.$router.push('/cotizacion');
     },
     limpiaForma(){
+      this.vbuscar = true;
       this.vciudad = '';
       this.vzona = '';
       this.vlocalidad = '';
@@ -277,9 +293,27 @@ export default {
         anticipo: false,
         persona:0
       };
-
-
-    }
-  }
+      this.titleSugerido='';
+      this.listaSugerido = [];
+    },
+    SCiudad(event){
+      this.vciudad = event.target.value;
+    },
+    SZona(event){
+      this.vzona = event.target.value;
+    },
+    SLocalidad(event){
+      this.vlocalidad = event.target.value;
+    },
+    SEstrato(event){
+      this.vestrato = event.target.value;
+    },
+    STipo(event){
+      this.vtipo = event.target.value;
+    },
+    SServicio(event){
+      this.vservicio = event.target.value;
+    }  
+  },
 };
 </script>

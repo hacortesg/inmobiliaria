@@ -20,8 +20,8 @@
             <td><input required type="email" name="email" placeholder="nombre@ejemplo.com" v-model="vemail"></td>
         </tr>
         <tr>
-          <td align="center"><button @click="registre">Registrese</button> </td>
-          <td align="center"><button @click="clear">Limpiar</button> </td>
+          <td align="center"><button @click.prevent="registre">Registrese</button> </td>
+          <td align="center"><button @click.prevent="clear">Limpiar</button> </td>
         </tr>
       </table>
   </section>
@@ -64,12 +64,13 @@
 
   <script>
 
-import ClienteService from "@/services/obcliente.js";
+import UsuarioService from "@/services/obcliente.js";
+
 
   export default {
     mounted(){
       document.title = 'Registro de usuario'
-      this.listaUsuarios = ClienteService.obtenerCliente();
+      this.listaUsuarios = UsuarioService.obtenerUsuarios();
     },
     data(){
       return {
@@ -106,6 +107,7 @@ import ClienteService from "@/services/obcliente.js";
         this.registro.telefono = this.vtelefono;
         this.registro.email = this.vemail;
         this.listaUsuarios.push(this.registro);
+        this.clear();
         console.log(this.listaUsuarios);
       },
       clear(){
