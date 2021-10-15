@@ -45,7 +45,7 @@
           <tr><td colspan="2"><p>{{titleSugerido}}</p></td></tr>
           <tr v-for="sugeridoU, i in listaSugerido" :key="sugeridoU">
           <div><img width="200" :src="sugeridoU.img" :alt="sugeridoU.id">
-          <button @click.prevent="cotizar(i)">Cotizar b{{sugeridoU.img}}b</button> </div></tr>
+          <button @click.prevent="cotizar(i)">Cotizar {{sugeridoU.direccion}}</button> </div></tr>
         </tbody>
       </table>
     </div>
@@ -125,7 +125,8 @@ export default {
       tarifa: [],
       encontrado:{
         id:0,
-        img:''
+        img:'',
+        direccion:''
       },
       buscado:{
         ciudad:'',
@@ -199,7 +200,8 @@ export default {
           this.buscado.preciox >= reg.preciox){
             this.titleSugerido = 'Inmuebles sugeridos en la lista';
             this.encontrado.id = reg.id;
-            this.encontrado.img = require(reg.img); //require()
+            this.encontrado.img = reg.img; //require()
+            this.encontrado.direccion = reg.direccion;
             this.listaSugerido.push(this.encontrado);
             this.encontrado = {id:0, img:''};
             console.log('match -> ' + this.listaSugerido[0].img);
