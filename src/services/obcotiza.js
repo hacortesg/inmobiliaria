@@ -1,8 +1,12 @@
+import axios from "axios";
+import puertoService from '@/router/puerto.js';
+
 class CotizaService {
 
     cotizacion = {};
     tarifa = [];
 
+    url = puertoService.obtenerPuerto();;
 
     constructor() {
 
@@ -38,7 +42,8 @@ class CotizaService {
     }
 
     obtenerTarifa() {
-        return this.tarifa;
+        return axios.get(`${this.url}/impuesto/todos`);
+//        return this.tarifa;
     };
 
 } export default new CotizaService();

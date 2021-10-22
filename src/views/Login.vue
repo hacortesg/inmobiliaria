@@ -19,10 +19,14 @@
         <td><input required type="password" name="password" v-model="vpassword"></td>
      </tr>
      <tr align="center">
-       <td><button @click.prevent="ingresa">Ingrese</button>  </td>
+       <td><button @click.prevent="inicia">Ingrese</button>  </td>
      </tr>
      <tr>
        <td><router-link :to="{name: 'About'}">Registrese</router-link></td>
+     </tr>
+     <tr v-if="verror">
+        <td>¡¡ Datos no registrados !!
+        <button @click.prevent="listo">X</button>  </td>
      </tr>
     </table>
   </section>
@@ -68,16 +72,19 @@ import UsuarioService from '@/services/obcliente.js';
 
 export default {
   mounted(){
+//    localStorage.clear();
     document.title = 'Ingreso de Usuario';
-    this.listaUsuario = UsuarioService.obtenerUsuarios();
-    this.vestado = UsuarioService.obtenerIngresado();
+//    this.listaUsuario = UsuarioService.obtenerUsuarios();
+//    this.vestado = UsuarioService.obtenerIngresado();
   },
   data(){
     return{
       listaUsuario: [],
       vusuario: '',
       vpassword: '',
-      vestado: []
+      vestado: [],
+      dusuario:{},
+      verror:false
     }
   },
   name: 'Login',
@@ -85,7 +92,31 @@ export default {
 
   },
   methods:{
-    ingresa(){
+    inicia(){
+      UsuarioService.validar(vusuario, vpassword).then((respuesta)=>{
+        //respuesta.data.id
+        if(respuesta.data!=null){
+          // para la pestaña
+        // sessionStorage
+          // para la pagina console.lot(respuesta.data.id)
+          localStorage.cliente = respuesta.data.id;
+          
+//          UsuarioService.setUsuario(respuesta.data);
+          this.$router.push({name:"Cotizacion"});
+        }
+        else{
+          this.verror = true;
+        }
+      });
+    },
+cerrar(){
+    localStorage.clear();
+    this.$router.push({name:"Login"});
+},
+listo(){
+  this.verror = false;
+},
+ingresa(){
       let pasa = false;
       for(let u = 0; u < this.listaUsuario.length; u++){
         if(this.listaUsuario[u].usuario == this.vusuario && this.listaUsuario[u].password == this.vpassword){
@@ -97,7 +128,8 @@ export default {
         };
       };
       if(!pasa){
-        alert('No se encontro el usuario; ' + this.vusuario);
+//        alert('No se encontro el usuario; ' + this.vusuario);
+        this.verror = true;
       };
     }
   }

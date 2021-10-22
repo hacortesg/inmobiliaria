@@ -12,7 +12,8 @@
     <router-link to="/">Inicio</router-link> |
     <router-link to="/about">Registrese</router-link> |
     <router-link to="/cotizacion">Cotizacion</router-link> |
-    <router-link to="/login">Ingrese</router-link>
+    <router-link to="/login">Ingrese</router-link> |
+    <!--router-link v-if="localStorage==null">Cerrar Sesión</router-link-->
   </div>
   <router-view />
 </template>

@@ -22,6 +22,7 @@ const routes = [
     path: '/cotizacion',
     name: 'Cotizacion',
     component: Cotizacion
+ //   beforeEnter: [ingresado]
   },
   {
     path: '/login',

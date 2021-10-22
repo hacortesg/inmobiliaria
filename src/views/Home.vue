@@ -4,22 +4,22 @@
     <table>
       <tbody>
       
-        <tr> <th colspan="2"><p>Filtros Disponibles</p></th></tr>
+        <tr> <th colspan="2"><p>Filtros Disponibles {{actual.nombre}}</p></th></tr>
         <tr> <th>Ciudad: </th>
         <td> <select v-model="vciudad" @change="SCiudad($event)"><option value="" disabled selected>Seleccione una Ciudad</option>
-        <option v-for="ciudadU, i in listaCiudad" :key="i" :value="i">{{i}}. {{ciudadU.nombre}}</option> </select> </td>
+        <option v-for="ciudadU, i in listaCiudad" :key="i" :value="listaCiudad.id">{{ciudadU.id}}. {{ciudadU.nombre}}</option> </select> </td>
         </tr><tr><th>Zona: </th>
         <td> <select v-model="vzona" @change="SZona($event)"> <option value="" disabled selected>Seleccione una Zona</option> 
-        <option v-for="zonaU, i in listaZona" :key="i" :value="i">{{i}}. {{zonaU.nombre}}</option> </select> </td>
+        <option v-for="zonaU, i in listaZona" :key="i" :value="zonaU.id">{{zonaU.id}}. {{zonaU.nombre}}</option> </select> </td>
         </tr><tr><th>Localidad: </th>
         <td> <select v-model="vlocalidad" @change="SLocalidad($event)"> <option value="" disabled selected>Seleccione una Localidad</option> 
-        <option v-for="localidadU, i in listaLocalidad" :key="i" :value="i">{{i}}. {{localidadU.nombre}}</option> </select> </td>
+        <option v-for="localidadU, i in listaLocalidad" :key="i" :value="localidadU.id">{{localidadU.id}}. {{localidadU.nombre}}</option> </select> </td>
         </tr><tr><th>Estrato:</th>
         <td> <select v-model="vestrato" @change="SEstrato($event)"> <option value="" disabled selected>Seleccione un Estrato</option> 
-        <option v-for="estratoU, i in listaEstrato" :key="i" :value="i">{{i}}. {{estratoU.nombre}}</option> </select> </td>
+        <option v-for="estratoU, i in listaEstrato" :key="i" :value="estratoU.id">{{estratoU.id}}. {{estratoU.nombre}}</option> </select> </td>
         </tr><tr><th>Tipo de inmueble: </th>
         <td> <select v-model="vtipo" @change="STipo($event)" > <option value="" disabled selected>Seleccione un Tipo</option> 
-        <option v-for="tipoU, i in listaTipo" :key="i" :value="i">{{i}}. {{tipoU.nombre}}</option> </select> </td>
+        <option v-for="tipoU, i in listaTipo" :key="i" :value="tipoU.id">{{tipoU.id}}. {{tipoU.nombre}}</option> </select> </td>
         </tr><tr><th>Sala:</th><td><input type="checkbox" name="" id="" v-model="vsala">  </td>
         </tr><tr><th>Comedor:</th><td><input type="checkbox" name="" id="" v-model="vcomedor">  </td>
         </tr><tr><th>Cocina:</th><td><input type="checkbox" name="" id="" v-model="vcocina">  </td>
@@ -30,7 +30,7 @@
         </tr><tr><th>Precio Máximo:</th><td><input type="number" name="" id="" v-model="vpreciox"></td>
         </tr><tr><th>Tipo de Servicio: </th>
         <td> <select v-model="vservicio" @change="SServicio($event)"> <option value="" disabled selected>Seleccione un servicio</option> 
-        <option v-for="servicioU, i in listaServicio" :key="i" :value="i">{{i}}. {{servicioU.nombre}} ${{servicioU.precio}}</option> </select> </td>
+        <option v-for="servicioU, i in listaServicio" :key="i" :value="servicioU.id">{{servicioU.id}}. {{servicioU.nombre}} ${{servicioU.precio}}</option> </select> </td>
         </tr><tr><th>Anticipo Anual:</th><td><input type="checkbox" name="" id="" v-model="vanticipo">  </td>
       </tr><tr><th>Tipo de Persona: </th><td><input type="radio" name="persona" value="0" v-model="vpersona">Natural
       <input type="radio" name="persona" value="1" v-model="vpersona">Jurídica</td>
@@ -44,8 +44,8 @@
         <tbody>
           <tr><td colspan="2"><p>{{titleSugerido}}</p></td></tr>
           <tr v-for="sugeridoU, i in listaSugerido" :key="sugeridoU">
-          <div><img width="200" :src="sugeridoU.img" :alt="sugeridoU.id">
-          <button @click.prevent="cotizar(i)">Cotizar {{sugeridoU.direccion}}</button> </div></tr>
+          <div><img width="200" :src="sugeridoU.img" :alt="sugeridoU.id">{{sugeridoU.direccion}}
+          <button @click.prevent="cotizar(i)">Cotizar</button> </div></tr>
         </tbody>
       </table>
     </div>
@@ -96,17 +96,53 @@ import UsuarioService from '@/services/obcliente.js';
 export default {
   mounted(){
     document.tilte = "Filtro de inmuebles";
-    this.listaCiudad = SitioService.obtenerCiudad();
-    this.listaZona = SitioService.obtenerZona();
-    this.listaLocalidad = SitioService.obtenerLocalidad();
-    this.listaEstrato = SitioService.obtenerEstrato();
-    this.listaTipo = InmuebleService.obtenerTipo();
-    this.listaServicio = InmuebleService.obtenerServicio();
-    this.listaDisponible = InmuebleService.obtenerDisponible();
+//    this.listaCiudad = SitioService.obtenerCiudad();
+//    console.log(listaCiudad);
+    console.log(localStorage);
+    SitioService.obtenerCiudad().then((respuesta)=>{
+      //if()
+      this.listaCiudad = respuesta.data;
+    });
+//    this.listaZona = SitioService.obtenerZona();
+    SitioService.obtenerZona().then((respuesta)=>{
+      this.listaZona = respuesta.data;
+    });
+//    this.listaLocalidad = SitioService.obtenerLocalidad();
+    SitioService.obtenerLocalidad().then((respuesta)=>{
+      this.listaLocalidad = respuesta.data;
+    });
+//    this.listaEstrato = SitioService.obtenerEstrato();
+    SitioService.obtenerEstrato().then((respuesta)=>{
+      this.listaEstrato = respuesta.data;
+    });
+//    this.listaTipo = InmuebleService.obtenerTipo();
+    InmuebleService.obtenerTipo().then((respuesta)=>{
+      this.listaTipo = respuesta.data;
+      console.log(this.respuesta.data);
+    });
+//    this.listaServicio = InmuebleService.obtenerServicio();
+      InmuebleService.obtenerServicio.then((respuesta)=>{
+        this.listaServicio = respuesta.data;
+      });
+//    this.listaDisponible = InmuebleService.obtenerDisponible();
+    InmuebleService.obtenerDisponible.then((respuesta)=>{
+      this.listaDisponible = respuesta.data;
+    });
     this.cotiza = CotizaService.obtenerCotizacion();
-    this.tarifa = CotizaService.obtenerTarifa();
-    this.listaUsuario = UsuarioService.obtenerUsuarios();
-    this.vestado = UsuarioService.obtenerIngresado();
+//    this.tarifa = CotizaService.obtenerTarifa();
+    CotizaService.obtenerTarifa.then((respuesta)=>{
+      this.tarifa = respuesta.data;
+    });
+//    this.listaUsuario = 
+    CotizaService.obtenerTarifa.then((respuesta)=>{
+      this.tarifa = respuesta.data;
+    });
+//    this.vestado = UsuarioService.obtenerIngresado();
+    UsuarioService.obtenerById.then((respuesta)=>{
+      if(respuesta.data.id!=null){
+        this.actual = respuesta.data;
+      }
+    });
   },
   data(){
     return{
@@ -122,6 +158,7 @@ export default {
       listaUsuario: [],
       vestado: [],
       cotiza:{},
+      actual:[],
       tarifa: [],
       encontrado:{
         id:0,
@@ -133,16 +170,16 @@ export default {
         zona:'',
         localidad:'',
         estrato: '',
-        sala:false,
-        comedor:false,
-        cocina:false,
-        parqueadero:false,
+        sala:'',
+        comedor:'',
+        cocina:'',
+        parqueadero:'',
         bano: 0,
         alcoba:0,
         preciox: 0,
-        amoblado:false,
+        amoblado:'',
         servicio: 0,
-        anticipo: false,
+        anticipo: '',
         persona:0
       },
       vciudad: '',
@@ -150,16 +187,16 @@ export default {
       vlocalidad: '',
       vestrato: '',
       vtipo: '',
-      vsala:false,
-      vcomedor:false,
-      vcocina:false,
-      vparqueadero:false,
+      vsala:'',
+      vcomedor:'',
+      vcocina:'',
+      vparqueadero:'',
       vbano:0,
       valcoba:0,
       vpreciox:0,
-      vamoblado:false,
+      vamoblado:'',
       vservicio: '',
-      vanticipo:false,
+      vanticipo:'',
       vpersona: 0,
       vbuscar: true
     }
@@ -174,10 +211,18 @@ export default {
       this.buscado.zona = parseInt(this.vzona);
       this.buscado.localidad = parseInt(this.vlocalidad);
       this.buscado.estrato = parseInt(this.vestrato);
-      this.buscado.sala = this.vsala;
-      this.buscado.comedor = this.vcomedor;
-      this.buscado.cocina = this.vcocina;
-      this.buscado.parqueadero = this.vparqueadero;
+      if(this.vsala){
+        this.buscado.sala = 1;
+      }
+      if(this.vcomedor){
+        this.buscado.comedor = 1;
+      }
+      if(this.vcocina){
+        this.buscado.cocina = 1;
+      }
+      if(this.vparqueadero){
+        this.buscado.parqueadero = 1;
+      }
       this.buscado.amoblado = this.vamoblado;
       this.buscado.bano = this.vbano;
       this.buscado.alcoba = this.valcoba;
@@ -203,21 +248,23 @@ export default {
             this.encontrado.img = reg.img; //require()
             this.encontrado.direccion = reg.direccion;
             this.listaSugerido.push(this.encontrado);
-            this.encontrado = {id:0, img:''};
+            this.encontrado = {id:0, img:'', direccion: ''};
             console.log('match -> ' + this.listaSugerido[0].img);
         }
             console.log(reg);
       }
-      if(this.listaSugerido!=null){
+      if(this.listaSugerido.length>0){
       this.vbuscar = false;
       }
     },
     cotizar(pos){
       console.log(this.vestado);
-      if(this.vestado[0]>=0){
-        let nombre = this.listaUsuario[this.vestado[0]].nombre;
-        let apellido = this.listaUsuario[this.vestado[0]].apellido;
-        let documento = this.listaUsuario[this.vestado[0]].documento;
+      //if(this.vestado[0]>=0){
+      if(localStorage.cliente>0){ //  !=null)
+
+        let nombre = this.acutal[0].nombre;
+        let apellido = this.actual[0].apellido;
+        let documento = this.actual[0].documento;
         this.cotiza.cliente = nombre + ' '+ apellido + ' ('+ documento + ')';
       };
       let total = 0;
@@ -245,11 +292,12 @@ export default {
         this.cotiza.descuentos = anticipo.toFixed(1);
         total -= this.cotiza.descuentos;
       }
-      if(tipoI >= 0 || tipoI <= 3){
-        let admon = canon * 0.07
-        this.cotiza.admon = admon.toFixed(1);
-       total += admon;
-      }
+      let admon = canon * this.listaTipo[this.listaDisponible[pos].tipo].administracion;
+//      if(tipoI >= 0 || tipoI <= 3){
+//        let admon = canon * this.tipo
+      this.cotiza.admon = admon.toFixed(1);
+      total += admon;
+//      }
       if(this.vamoblado){
         let amobla = canon * 0.12;
         this.cotiza.amoblado = amobla.toFixed(1);
@@ -283,10 +331,10 @@ export default {
         zona:'',
         localidad:'',
         estrato: '',
-        sala:false,
-        comedor:false,
-        cocina:false,
-        parqueadero:false,
+        sala: 0,
+        comedor: 0,
+        cocina: 0,
+        parqueadero: 0,
         amoblado:false,
         bano: 0,
         alcoba:0,

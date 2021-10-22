@@ -1,22 +1,27 @@
+import axios from "axios";
+import puertoService from '@/router/puerto.js';
+
 class InmuebleService {
 
     tipo = [];
     servicio = [];
     disponible = [];
 
+    url = puertoService.obtenerPuerto();
+
     constructor() {
 
         this.tipo = [
-            { nombre: "Apartaestudio", comision: 0.06 },
-            { nombre: "Apartamento", comision: 0.06 },
-            { nombre: "Consultorio", comision: 0.06 },
-            { nombre: "Local", comision: 0.06 },
-            { nombre: "Casa", comision: 0.08 },
-            { nombre: "Bodega", comision: 0.1 },
-            { nombre: "Fabrica", comision: 0.1 },
-            { nombre: "Edificio", comision: 0.15 },
-            { nombre: "Finca", comision: 0.09 },
-            { nombre: "Terreno", comision: 0.07 }
+            { nombre: "Apartaestudio", comision: 0.06, administracion: 0.07 },
+            { nombre: "Apartamento", comision: 0.06, administracion: 0.07 },
+            { nombre: "Consultorio", comision: 0.06, administracion: 0.07 },
+            { nombre: "Local", comision: 0.06, administracion: 0.07 },
+            { nombre: "Casa", comision: 0.08, administracion: 0.0 },
+            { nombre: "Bodega", comision: 0.1, administracion: 0.0 },
+            { nombre: "Fabrica", comision: 0.1, administracion: 0.0 },
+            { nombre: "Edificio", comision: 0.15, administracion: 0.0 },
+            { nombre: "Finca", comision: 0.09, administracion: 0.0 },
+            { nombre: "Terreno", comision: 0.07, administracion: 0.0 }
         ];
 
         this.servicio = [
@@ -42,10 +47,10 @@ class InmuebleService {
                 zona: 1,
                 localidad: 1,
                 estrato: 1,
-                sala: true,
-                comedor: true,
-                cocina: true,
-                parquedero: true,
+                sala: 1, // 1 Si, 0 No
+                comedor: 1, // 1 Si, 0 No
+                cocina: 1, // 1 Si, 0 No
+                parquedero: 1, // 1 Si, 0 No
                 //                amoblado: true,
                 bano: 1,
                 alcoba: 1,
@@ -62,14 +67,14 @@ class InmuebleService {
                 tipo: 2,
                 construccion: '01/05/2002',
                 direccion: 'CR 20# 20-20',
-                ciudad: 2,
-                zona: 2,
-                localidad: 2,
-                estrato: 2,
-                sala: true,
-                comedor: true,
-                cocina: true,
-                parquedero: true,
+                ciudad: 0,
+                zona: 0,
+                localidad: 0,
+                estrato: 0,
+                sala: 0, // 1 Si, 0 No
+                comedor: 0, // 1 Si, 0 No
+                cocina: 0, // 1 Si, 0 No
+                parquedero: 0, // 1 Si, 0 No
                 //                amoblado: true,
                 bano: 1,
                 alcoba: 1,
@@ -89,10 +94,10 @@ class InmuebleService {
                 zona: 4,
                 localidad: 4,
                 estrato: 4,
-                sala: true,
-                comedor: true,
-                cocina: true,
-                parquedero: true,
+                sala: 1, // 1 Si, 0 No
+                comedor: 1, // 1 Si, 0 No
+                cocina: 1, // 1 Si, 0 No
+                parquedero: 1, // 1 Si, 0 No
                 //                amoblado: false,
                 bano: 4,
                 alcoba: 4,
@@ -108,14 +113,17 @@ class InmuebleService {
     };
 
     obtenerTipo() {
-        return this.tipo;
+        return axios.get(`${this.url}/tipo/todos`)
+//        return this.tipo;
     };
 
     obtenerServicio() {
-        return this.servicio;
+        return axios.get(`${this.url}/servicio/todos`)
+//        return this.servicio;
     };
 
     obtenerDisponible() {
+//        return axios.get(`${this.url}/inmueble/todos`)
         return this.disponible;
     }
 
