@@ -9,14 +9,35 @@
     </div>
   </header>
   <div id="nav">
-    <router-link to="/">Inicio</router-link> |
-    <router-link to="/about">Registrese</router-link> |
-    <router-link to="/cotizacion">Cotizacion</router-link> |
-    <router-link to="/login">Ingrese</router-link> |
+    <div>
+      <router-link to="/">Inicio</router-link> |
+      <router-link to="/about">Registrese</router-link> |
+      <router-link to="/cotizacion">Cotizacion</router-link> |
+      <router-link to="/login">Ingrese</router-link> |
+    </div>
+    <div>
+      <a v-if="localStorage>0" @click:prevent="cerrar" href="#">Cerrar sesion</a>
+    </div>
     <!--router-link v-if="localStorage==null">Cerrar Sesión</router-link-->
   </div>
   <router-view />
 </template>
+
+<script>
+export default {
+  data(){
+    return{
+      vcerrar: true
+    }
+  },
+  methods:{
+    cerrar(){
+      localStorage.clear();
+//      vcerrar = false;
+    }
+  }
+}
+</script>
 
 <style>
 /*:root{
@@ -70,8 +91,12 @@
   font-family: "Iceberg", cursive;
   color: white;
   font-size: 1.5rem;
+  display: flex;
+  justify-content: space-around;
   text-align: center;
-  justify-content: center;
+/*  
+  grid: flex;
+*/
 }
 
 #nav a {
@@ -128,7 +153,11 @@ section button {
     height: 3rem;
     border-radius: 0.4rem;
 }
-
+.pago {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 
 

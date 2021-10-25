@@ -51,6 +51,24 @@
       </tbody>
     </table>
     </form>
+    <table>
+      <tbody v-if="vpagoOff" class="pago">
+        <div>
+          <p>Estimad@ cliente: {{cotiza.cliente}} Por favor realice su deposito en Oficina Banco DaCasa: 212055950</p>
+        </div>
+        <div>
+          <button @click.prevent="listoOff">Cerrar</button>
+        </div>
+      </tbody>
+      <tbody v-if="vpagoOn" class="pago">
+        <div>
+          <p>Estimad@ cliente: {{cotiza.cliente}} Por favor realice su deposito en Oficina Banco Damasplata: 3168784257</p>
+        </div>
+        <div>
+            <button @click.prevent="listoOn">Cerrar</button>
+        </div>
+      </tbody>      
+    </table>
     <div>
       
     </div>
@@ -104,6 +122,8 @@ export default {
   data() {
     return {
       cotiza: {},
+      vpagoOff: false,
+      vpagoOn: false
     };
   },
   name: 'Cotizacion',
@@ -112,10 +132,18 @@ export default {
   },
   methods: {
     depositoOff(){
-      alert(`Estimad@ cliente: ${this.cotiza.cliente} Por favor realice su deposito en Oficina Banco DaCasa: 212055950`);
+      this.vpagoOff = true;
+//      alert(`Estimad@ cliente: ${this.cotiza.cliente} Por favor realice su deposito en Oficina Banco DaCasa: 212055950`);
     },
     depositoOn(){
-      alert(`Estimad@ cliente: ${this.cotiza.cliente} Por favor realice su deposito en Damasplata: 3168784257`);
+      this.vpagoOn = true;
+//      alert(`Estimad@ cliente: ${this.cotiza.cliente} Por favor realice su deposito en Damasplata: 3168784257`);
+    },
+    listoOff(){
+      this.vpagoOff = false;      
+    },
+    listoOn(){
+      this.vpagoOn = false;
     }
   },
 };
