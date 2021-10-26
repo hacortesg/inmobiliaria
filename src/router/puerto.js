@@ -2,7 +2,7 @@ class puertoService{
 
     puerto="";
     constructor(){
-        this.puerto = "http://localhost:8000";
+        this.puerto = "http://localhost:8080";
     };
 
     obtenerPuerto(){
