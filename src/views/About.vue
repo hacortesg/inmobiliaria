@@ -20,7 +20,7 @@
             <td><input required type="email" name="email" placeholder="nombre@ejemplo.com" v-model="vemail"></td>
         </tr>
         <tr>
-          <td align="center"><button @click.prevent="registre">Registrese</button> </td>
+          <td align="center"><button @click.prevent="registrar">Registrese</button> </td>
           <td align="center"><button @click.prevent="clear">Limpiar</button> </td>
         </tr>
         <tr v-if="vregistrado">
@@ -104,7 +104,7 @@ import UsuarioService from "@/services/obcliente.js";
 
     },
     methods:{
-      registre(){
+      registrar(){
         this.registro.documento = this.vdocumento;
         this.registro.nombre = this.vnombre;
         this.registro.apellido = this.vapellido;
@@ -112,14 +112,23 @@ import UsuarioService from "@/services/obcliente.js";
         this.registro.password = this.vpassword;
         this.registro.telefono = this.vtelefono;
         this.registro.email = this.vemail;
-//        this.listaUsuarios.push(this.registro);
-        UsuarioService.registrar(this.registro).then((respuesta)=>{
+        let mdocumento = this.vdocumento;
+        let mnombre = this.vnombre;
+        let mapellido = this.vapellido;
+        let muser = this.vusuario;
+        let mpass = this.vpassword;
+        let mtel = this.vtelefono;
+        let memail = this.vemail;
+
+        console.log(this.registro)
+//        this.listaUsuarios.push(mdocumento, mnombre, mapellido, muser, mpass, mtel, memail);
+        UsuarioService.registrar(mdocumento, mnombre, mapellido, muser, mpass, mtel, memail).then((respuesta)=>{
           console.log(respuesta.data);
           vregistrado = true;
         });
-        this.vregistrado = true;
+        //this.vregistrado = true;
         this.clear();
-        console.log(this.listaUsuarios);
+        //console.log(this.listaUsuarios);
       },
       clear(){
         this.vdocumento = '';

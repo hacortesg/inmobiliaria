@@ -7,7 +7,7 @@
         <tr> <th colspan="2"><p>Filtros Disponibles {{actual.nombre}}</p></th></tr>
         <tr> <th>Ciudad: </th>
         <td> <select v-model="vciudad" @change="SCiudad($event)"><option value="" disabled selected>Seleccione una Ciudad</option>
-        <option v-for="ciudadU, i in listaCiudad" :key="i" :value="listaCiudad.id">{{ciudadU.id}}. {{ciudadU.nombre}}</option> </select> </td>
+        <option v-for="ciudadU, i in listaCiudad" :key="i" :value="ciudadU.id">{{ciudadU.id}}. {{ciudadU.nombre}}</option> </select> </td>
         </tr><tr><th>Zona: </th>
         <td> <select v-model="vzona" @change="SZona($event)"> <option value="" disabled selected>Seleccione una Zona</option> 
         <option v-for="zonaU, i in listaZona" :key="i" :value="zonaU.id">{{zonaU.id}}. {{zonaU.nombre}}</option> </select> </td>
@@ -98,7 +98,7 @@ export default {
     document.tilte = "Filtro de inmuebles";
 //    this.listaCiudad = SitioService.obtenerCiudad();
 //    console.log(listaCiudad);
-    console.log(localStorage);
+    console.log(localStorage.cliente);
     SitioService.obtenerCiudad().then((respuesta)=>{
       //if()
       this.listaCiudad = respuesta.data;
@@ -121,24 +121,27 @@ export default {
       console.log(this.respuesta.data);
     });
 //    this.listaServicio = InmuebleService.obtenerServicio();
-      InmuebleService.obtenerServicio.then((respuesta)=>{
+      InmuebleService.obtenerServicio().then((respuesta)=>{
         this.listaServicio = respuesta.data;
       });
 //    this.listaDisponible = InmuebleService.obtenerDisponible();
-    InmuebleService.obtenerDisponible.then((respuesta)=>{
+    InmuebleService.obtenerDisponible().then((respuesta)=>{
       this.listaDisponible = respuesta.data;
     });
-    this.cotiza = CotizaService.obtenerCotizacion();
+    if(localStorage.cliente==null){
+      this.cotiza = CotizaService.obtenerTemporal();
+    }else{
+      CotizaService.obtenerCotizacion().then((respuesta)=>{
+        this.cotiza = respuesta.data;
+      });
+    }
 //    this.tarifa = CotizaService.obtenerTarifa();
-    CotizaService.obtenerTarifa.then((respuesta)=>{
-      this.tarifa = respuesta.data;
-    });
 //    this.listaUsuario = 
-    CotizaService.obtenerTarifa.then((respuesta)=>{
+    CotizaService.obtenerTarifa().then((respuesta)=>{
       this.tarifa = respuesta.data;
     });
 //    this.vestado = UsuarioService.obtenerIngresado();
-    UsuarioService.obtenerById.then((respuesta)=>{
+    UsuarioService.obtenerById().then((respuesta)=>{
       if(respuesta.data.id!=null){
         this.actual = respuesta.data;
       }
@@ -260,7 +263,7 @@ export default {
     cotizar(pos){
       console.log(this.vestado);
       //if(this.vestado[0]>=0){
-      if(localStorage.cliente>0){ //  !=null)
+      if(localStorage.cliente!=null){
 
         let nombre = this.acutal[0].nombre;
         let apellido = this.actual[0].apellido;
@@ -299,9 +302,9 @@ export default {
       total += admon;
 //      }
       if(this.vamoblado){
-        let amobla = canon * 0.12;
-        this.cotiza.amoblado = amobla.toFixed(1);
-        total += amobla;
+        let amoblado = canon * 0.12;
+        this.cotiza.amoblado = amoblado.toFixed(1);
+        total += amoblado;
      }
       this.cotiza.total = total.toFixed(1);
 

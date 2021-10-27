@@ -25,12 +25,14 @@ class CotizaService {
 
         this.tarifa= [
             {
-                tipo: 1,
+                id: 1,
+                nombre: "excento",
                 porcien: 0,
                 mas: 0
             },
             {
-                tipo: 2,
+                id: 2,
+                nombre: "iva",
                 porcien: 0.19,
                 mas: 0.03
             }

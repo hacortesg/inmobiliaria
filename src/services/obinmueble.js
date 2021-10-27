@@ -58,32 +58,28 @@ class InmuebleService {
                 //                servicio: 2,
                 //                anticipo: false,
                 //                persona: 0,
-                img: '/home/humberto/Projects/repositorio/inmobiliaria/src/assets/img/apto_1.jpg'
+                img: '@/assets/img/apto_1.jpg'
 
             },
             {
-                id: 2,
-                metros: '60',
-                tipo: 2,
-                construccion: '01/05/2002',
-                direccion: 'CR 20# 20-20',
+                id: 1,
+                metros: 60,
+                construido: "01/05/2002",
+                direccion: "CR 20# 20-20",
                 ciudad: 0,
                 zona: 0,
                 localidad: 0,
                 estrato: 0,
-                sala: 0, // 1 Si, 0 No
-                comedor: 0, // 1 Si, 0 No
-                cocina: 0, // 1 Si, 0 No
-                parquedero: 0, // 1 Si, 0 No
-                //                amoblado: true,
+                tipo: 2,
+                sala: 0,
+                comedor: 0,
+                cocina: 0,
+                parqueadero: 0,
                 bano: 1,
                 alcoba: 1,
                 preciox: 500000,
-                //                servicio: 2,
-                //                anticipo: false,
-                //               persona: 0,
-                img: '../assets/img/apto_2.jpg'
-            },
+                img: "https://github.com/hcortesg/inmobiliaria/tree/master/src/assets/img/apto_2.jpg"
+              },
             {
                 id: 3,
                 metros: '140',
@@ -123,8 +119,8 @@ class InmuebleService {
     };
 
     obtenerDisponible() {
-//        return axios.get(`${this.url}/inmueble/todos`)
-        return this.disponible;
+        return axios.get(`${this.url}/inmueble/todos`)
+//        return this.disponible;
     }
 
 } export default new InmuebleService();

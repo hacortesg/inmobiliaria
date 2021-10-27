@@ -54,7 +54,8 @@ validar(muser, mpass){
     return this.axios.post(`${this.url}/validar`, datos);
 };
 
-registrar(miUser){
+registrar(mdocumento, mnombre, mapellido, muser, mpass, mtel, memail){
+    let miUser = {documento: mdocumento, nombre: mnombre, apellido: mapellido, usuario: muser, password: mpass, telefono: mtel, email: memail};
     this.axios.post(`${this.url}/cliente/${miUser}`);
 };
 
