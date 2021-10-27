@@ -23,6 +23,11 @@
           <td align="center"><button @click.prevent="registre">Registrese</button> </td>
           <td align="center"><button @click.prevent="clear">Limpiar</button> </td>
         </tr>
+        <tr v-if="vregistrado">
+          <td colspan="2" align="center">
+          <p>¡¡Datos Registrados!!</p>
+            <button @click.prevent="listo">Cerrar</button> </td>
+        </tr>
       </table>
   </section>
      <!-- --------------------------------INICIO DEL FOOTER------------------------- -->
@@ -70,7 +75,7 @@ import UsuarioService from "@/services/obcliente.js";
   export default {
     mounted(){
       document.title = 'Registro de usuario'
-      this.listaUsuarios = UsuarioService.obtenerUsuarios();
+//      this.listaUsuarios = UsuarioService.obtenerUsuarios();
     },
     data(){
       return {
@@ -82,6 +87,7 @@ import UsuarioService from "@/services/obcliente.js";
         vpassword: '',
         vtelefono: '',
         vemail: '',
+        vregistrado: false,
         registro: {
           documento:'',
           nombre: '',
@@ -106,7 +112,12 @@ import UsuarioService from "@/services/obcliente.js";
         this.registro.password = this.vpassword;
         this.registro.telefono = this.vtelefono;
         this.registro.email = this.vemail;
-        this.listaUsuarios.push(this.registro);
+//        this.listaUsuarios.push(this.registro);
+        UsuarioService.registrar(this.registro).then((respuesta)=>{
+          console.log(respuesta.data);
+          vregistrado = true;
+        });
+        this.vregistrado = true;
         this.clear();
         console.log(this.listaUsuarios);
       },
@@ -128,7 +139,10 @@ import UsuarioService from "@/services/obcliente.js";
           email: ''
         };
 
-      }
+      },
+      listo(){
+        this.vregistrado = false;
+      },
     }
   };
   </script>

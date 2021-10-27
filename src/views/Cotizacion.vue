@@ -116,7 +116,13 @@ import CotizaService from "@/services/obcotiza.js";
 export default {
   mounted() {
     document.title = "Cotización de inmueble";
-    this.cotiza = CotizaService.obtenerCotizacion();
+    if(localStorage.cliente==null){
+      this.cotiza = CotizaService.obtenerTemporal();
+    }else{
+      CotizaService.obtenenerCotizacion().then((respuesta)=>{
+        this.cotiza = respuesta.data;
+      });
+    }
 
   },
   data() {
@@ -133,10 +139,20 @@ export default {
   methods: {
     depositoOff(){
       this.vpagoOff = true;
+      if(localStorage.cliente==null){
+        CotizaService.registraCotizacion(this.cotiza).then((respuesta)=>{
+          console.log(respuesta.data);
+        });
+      }
 //      alert(`Estimad@ cliente: ${this.cotiza.cliente} Por favor realice su deposito en Oficina Banco DaCasa: 212055950`);
     },
     depositoOn(){
       this.vpagoOn = true;
+      if(localStorage.cliente==null){
+        CotizaService.registraCotizacion(this.cotiza).then((respuesta)=>{
+          console.log(respuesta.data);
+        });
+      }
 //      alert(`Estimad@ cliente: ${this.cotiza.cliente} Por favor realice su deposito en Damasplata: 3168784257`);
     },
     listoOff(){

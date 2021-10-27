@@ -6,7 +6,7 @@ class CotizaService {
     cotizacion = {};
     tarifa = [];
 
-    url = puertoService.obtenerPuerto();;
+    url = puertoService.obtenerPuerto();
 
     constructor() {
 
@@ -37,13 +37,21 @@ class CotizaService {
         ];
     };
 
+    obtenerTemporal(){
+       return this.cotizacion;
+    };
+
     obtenerCotizacion() {
-        return this.cotizacion;
+        let mId = localStorage.cliente;
+        return axios.get(`${this.url}/cotizacion/${mId}`);
     }
 
     obtenerTarifa() {
         return axios.get(`${this.url}/impuesto/todos`);
 //        return this.tarifa;
+    };
+    registrarCotizacion(miCotizacion){
+        return axios.post(`${this.url}/cotizacion/${miCotizacion}`);
     };
 
 } export default new CotizaService();

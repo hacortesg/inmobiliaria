@@ -49,9 +49,13 @@ obtenerIngresado(){
     return this.ingresado;
 };
 
-validar(muser, mpas){
+validar(muser, mpass){
     let datos = {usuario: muser, password: mpass};
     return this.axios.post(`${this.url}/validar`, datos);
+};
+
+registrar(miUser){
+    this.axios.post(`${this.url}/cliente/${miUser}`);
 };
 
 }export default new UsuarioService();
