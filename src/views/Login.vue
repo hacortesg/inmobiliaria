@@ -10,13 +10,13 @@
        <td>Usuario:</td>
      </tr>
      <tr>
-       <td><input required type="text" name="usuario" placeholder="Escriba su usuario" v-model="vusuario"></td>
+       <td><input required  v-model="vusuario" type="text" name="usuario" placeholder="Escriba su usuario"></td>
      </tr>
      <tr>
         <td>Contraseña:</td>
      </tr>
      <tr>
-        <td><input required type="password" name="password" v-model="vpassword"></td>
+        <td><input required  v-model="vpassword" type="password" name="password"></td>
      </tr>
      <tr align="center">
        <td><button @click.prevent="inicia">Ingrese</button>  </td>
@@ -80,8 +80,8 @@ export default {
   data(){
     return{
       listaUsuario: [],
-      vusuario: '',
-      vpassword: '',
+      vusuario: "",
+      vpassword: "",
       vestado: [],
       dusuario:{},
       verror:false
@@ -93,16 +93,17 @@ export default {
   },
   methods:{
     inicia(){
-      UsuarioService.validar(vusuario, vpassword).then((respuesta)=>{
+      console.log(this.vusuario + " " + this.vpassword);
+      UsuarioService.validar(this.vusuario, this.vpassword).then((respuesta)=>{
         //respuesta.data.id
         if(respuesta.data!=null){
           // para la pestaña
         // sessionStorage
           // para la pagina console.lot(respuesta.data.id)
           localStorage.cliente = respuesta.data.id;
-          
+          console.log(localStorage.cliente);
 //          UsuarioService.setUsuario(respuesta.data);
-          this.$router.push({name:"Cotizacion"});
+          this.$router.push({name:"Home"});
         }
         else{
           this.verror = true;

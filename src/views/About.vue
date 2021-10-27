@@ -80,22 +80,22 @@ import UsuarioService from "@/services/obcliente.js";
     data(){
       return {
         listaUsuarios: [],
-        vdocumento: '',
-        vnombre: '',
-        vapellido: '',
-        vusuario: '',
-        vpassword: '',
-        vtelefono: '',
-        vemail: '',
+        vdocumento: "",
+        vnombre: "",
+        vapellido: "",
+        vusuario: "",
+        vpassword: "",
+        vtelefono: "",
+        vemail: "",
         vregistrado: false,
         registro: {
-          documento:'',
-          nombre: '',
-          apellido: '',
-          usuario: '',
-          password: '',
-          telefono: '',
-          email: ''
+          documento:"",
+          nombre: "",
+          apellido: "",
+          usuario: "",
+          password: "",
+          telefono: "",
+          email: ""
         }
       }
     },
@@ -122,9 +122,10 @@ import UsuarioService from "@/services/obcliente.js";
 
         console.log(this.registro)
 //        this.listaUsuarios.push(mdocumento, mnombre, mapellido, muser, mpass, mtel, memail);
-        UsuarioService.registrar(mdocumento, mnombre, mapellido, muser, mpass, mtel, memail).then((respuesta)=>{
+        UsuarioService.registrar(mdocumento, mnombre, mapellido, muser, mpass, mtel, memail).then(
+          (respuesta)=>{
           console.log(respuesta.data);
-          vregistrado = true;
+          this.vregistrado = true;
         });
         //this.vregistrado = true;
         this.clear();

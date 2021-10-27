@@ -37,11 +37,11 @@ constructor(){
 
 obtenerById(){
     let mid = localStorage.cliente;
-    return axios.post(`${this.url}/${mid}`);
+    return axios.post(`${this.url}/cliente/${mid}`);
 };
 
 obtenerUsuarios(){
-    return axios.get(`${this.url}/cliente/todos`);
+    return axios.get(`${this.url}/cliente/`);
 //    return this.usuario;
 };
 
@@ -51,12 +51,19 @@ obtenerIngresado(){
 
 validar(muser, mpass){
     let datos = {usuario: muser, password: mpass};
-    return this.axios.post(`${this.url}/validar`, datos);
+    return axios.post(`${this.url}/cliente/validar/`, datos);
 };
 
 registrar(mdocumento, mnombre, mapellido, muser, mpass, mtel, memail){
-    let miUser = {documento: mdocumento, nombre: mnombre, apellido: mapellido, usuario: muser, password: mpass, telefono: mtel, email: memail};
-    this.axios.post(`${this.url}/cliente/${miUser}`);
+    let miUser = {
+        documento: mdocumento, 
+        nombre: mnombre, 
+        apellido: mapellido, 
+        usuario: muser, 
+        password: mpass, 
+        telefono: mtel, 
+        email: memail};
+    return axios.post(`${this.url}/cliente/`, miUser);
 };
 
 }export default new UsuarioService();

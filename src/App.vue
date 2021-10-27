@@ -16,7 +16,7 @@
       <router-link to="/login">Ingrese</router-link> |
     </div>
     <div>
-      <a v-if="localStorage>0" @click:prevent="cerrar" href="#">Cerrar sesion</a>
+      <a v-if="vcerrar" @click:prevent="cerrar" href="#">Cerrar sesion</a>
     </div>
     <!--router-link v-if="localStorage==null">Cerrar Sesión</router-link-->
   </div>
@@ -25,9 +25,14 @@
 
 <script>
 export default {
+  mounted(){
+    if(localStorage.cliente!=null){
+      this.vcerrar = true;
+    }
+  },
   data(){
     return{
-      vcerrar: true
+      vcerrar: false,
     }
   },
   methods:{
