@@ -37,8 +37,9 @@ export default {
   },
   methods:{
     cerrar(){
+      console.log("sesion: "+localStorage.cliente);
       localStorage.clear();
-//      vcerrar = false;
+      this.vcerrar = false;
     }
   }
 }

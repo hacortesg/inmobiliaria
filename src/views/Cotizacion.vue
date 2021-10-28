@@ -116,14 +116,14 @@ import CotizaService from "@/services/obcotiza.js";
 export default {
   mounted() {
     document.title = "Cotización de inmueble";
-    if(localStorage.cliente==null){
-      this.cotiza = CotizaService.obtenerTemporal();
-    }else{
-      CotizaService.obtenenerCotizacion().then((respuesta)=>{
-        this.cotiza = respuesta.data;
-      });
-    }
-
+    this.cotiza = CotizaService.obtenerTemporal();
+    console.log("Cotizacion: "+this.cotiza);
+ //   if(cotiza.cliente!=null){ //  localStorage.cliente
+ //   }else{
+ //     CotizaService.obtenenerCotizacion().then((respuesta)=>{
+ //       this.cotiza = respuesta.data;
+ //     });
+ //   }
   },
   data() {
     return {

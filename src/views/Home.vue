@@ -44,7 +44,7 @@
         <tbody>
           <tr><td colspan="2"><p>{{titleSugerido}}</p></td></tr>
           <tr v-for="sugeridoU, i in listaSugerido" :key="sugeridoU">
-          <div><img width="200" :src="sugeridoU.img" :alt="sugeridoU.id">{{sugeridoU.direccion}}
+          <div><img width="150" :src="sugeridoU.img" :alt="sugeridoU.id">{{sugeridoU.direccion}}
           <button @click.prevent="cotizar(i)">Cotizar</button> </div></tr>
         </tbody>
       </table>
@@ -118,21 +118,24 @@ export default {
 //    this.listaTipo = InmuebleService.obtenerTipo();
     InmuebleService.obtenerTipo().then((respuesta)=>{
       this.listaTipo = respuesta.data;
-      console.log(this.respuesta.data);
     });
 //    this.listaServicio = InmuebleService.obtenerServicio();
       InmuebleService.obtenerServicio().then((respuesta)=>{
         this.listaServicio = respuesta.data;
       });
 //    this.listaDisponible = InmuebleService.obtenerDisponible();
-    InmuebleService.obtenerDisponible().then((respuesta)=>{
+    InmuebleService.obtenerInmueble().then((respuesta)=>{
       this.listaDisponible = respuesta.data;
     });
     if(localStorage.cliente==null){
       this.cotiza = CotizaService.obtenerTemporal();
     }else{
       CotizaService.obtenerCotizacion().then((respuesta)=>{
-        this.cotiza = respuesta.data;
+        if(respuesta.data!=null){
+          this.cotiza = respuesta.data;
+        }else{
+          this.cotiza = CotizaService.obtenerTemporal();
+        }
       });
     }
 //    this.tarifa = CotizaService.obtenerTarifa();
@@ -141,11 +144,15 @@ export default {
       this.tarifa = respuesta.data;
     });
 //    this.vestado = UsuarioService.obtenerIngresado();
-    UsuarioService.obtenerById().then((respuesta)=>{
-      if(respuesta.data.id!=null){
-        this.actual = respuesta.data;
-      }
+    if (localStorage.cliente!=null){
+      UsuarioService.obtenerById().then((respuesta)=>{
+        if(respuesta.data.id!=null){
+          this.actual = respuesta.data;
+          console.log("cliente: " + this.actual);
+        }
     });
+
+    }
   },
   data(){
     return{
@@ -161,7 +168,7 @@ export default {
       listaUsuario: [],
       vestado: [],
       cotiza:{},
-      actual:[],
+      actual: {},
       tarifa: [],
       encontrado:{
         id:0,
@@ -173,6 +180,7 @@ export default {
         zona:'',
         localidad:'',
         estrato: '',
+        tipo: '',
         sala:'',
         comedor:'',
         cocina:'',
@@ -214,6 +222,7 @@ export default {
       this.buscado.zona = parseInt(this.vzona);
       this.buscado.localidad = parseInt(this.vlocalidad);
       this.buscado.estrato = parseInt(this.vestrato);
+      this.buscado.tipo = parseInt(this.vtipo);
       if(this.vsala){
         this.buscado.sala = 1;
       }
@@ -245,7 +254,7 @@ export default {
           this.buscado.sala == reg.sala || this.buscado.comedor == reg.comedor ||
           this.buscado.cocina == reg.cocina || this.buscado.parqueadero == reg.parqueadero ||
           this.buscado.bano == reg.bano || this.buscado.alcoba == reg.alcoba ||
-          this.buscado.preciox >= reg.preciox){
+          this.buscado.preciox >= reg.preciox || this.buscado.tipo == reg.tipo){
             this.titleSugerido = 'Inmuebles sugeridos en la lista';
             this.encontrado.id = reg.id;
             this.encontrado.img = reg.img; //require()
@@ -261,13 +270,14 @@ export default {
       }
     },
     cotizar(pos){
-      console.log(this.vestado);
+      console.log("cliente "+this.actual);
+      console.log(localStorage.cliente);
       //if(this.vestado[0]>=0){
-      if(localStorage.cliente!=null){
+      if(this.actual!=null){ //localStorage.cliente
 
-        let nombre = this.acutal[0].nombre;
-        let apellido = this.actual[0].apellido;
-        let documento = this.actual[0].documento;
+        let nombre = this.actual.nombre;
+        let apellido = this.actual.apellido;
+        let documento = this.actual.documento;
         this.cotiza.cliente = nombre + ' '+ apellido + ' ('+ documento + ')';
       };
       let total = 0;
@@ -275,7 +285,18 @@ export default {
       this.cotiza.canon = canon.toFixed(1);
       total = canon;
       let tipoI = this.listaDisponible[pos].tipo;
-      this.cotiza.tipo = this.listaTipo[tipoI].nombre;
+      console.log("tipo: "+tipoI);
+      for(let t in this.listaTipo){
+        if(t.id ==tipoI){
+          this.cotiza.tipo = t.nombre;
+          let comision = canon * t.comision;
+          this.cotiza.comision = comision.toFixed(1);
+          total += comision;
+          let admon = canon * t.administracion;
+          this.cotiza.admon = admon.toFixed(1);
+          total += admon;
+        }
+      }
       let servicio = this.listaServicio[this.buscado.servicio].precio;
       this.cotiza.servicio = this.listaServicio[this.buscado.servicio].nombre +' $'+servicio;
       total += servicio;
@@ -287,19 +308,14 @@ export default {
         this.cotiza.impuestos = dato.toFixed(1);
         total += dato;
       }
-      let comision = canon * this.listaTipo[this.listaDisponible[pos].tipo].comision;
-      this.cotiza.comision = comision.toFixed(1);
-      total += comision;
       if (this.vanticipo){
         let anticipo = canon * 0.1;
         this.cotiza.descuentos = anticipo.toFixed(1);
         total -= this.cotiza.descuentos;
+        total += canon * 11;
       }
-      let admon = canon * this.listaTipo[this.listaDisponible[pos].tipo].administracion;
 //      if(tipoI >= 0 || tipoI <= 3){
 //        let admon = canon * this.tipo
-      this.cotiza.admon = admon.toFixed(1);
-      total += admon;
 //      }
       if(this.vamoblado){
         let amoblado = canon * 0.12;
@@ -307,8 +323,8 @@ export default {
         total += amoblado;
      }
       this.cotiza.total = total.toFixed(1);
-
-      console.log(this.cotiza);
+      CotizaService.guardaTemporal(this.cotiza);
+      //console.log(this.cotiza);
       this.vbuscar = true;
       this.$router.push('/cotizacion');
     },

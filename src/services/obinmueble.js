@@ -118,7 +118,7 @@ class InmuebleService {
 //        return this.servicio;
     };
 
-    obtenerDisponible() {
+    obtenerInmueble() {
         return axios.get(`${this.url}/inmueble/todos`)
 //        return this.disponible;
     }

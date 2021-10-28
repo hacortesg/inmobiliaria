@@ -56,4 +56,8 @@ class CotizaService {
         return axios.post(`${this.url}/cotizacion/${miCotizacion}`);
     };
 
+    guardaTemporal(mCotiza){
+        this.cotizacion = mCotiza;
+    };
+
 } export default new CotizaService();
