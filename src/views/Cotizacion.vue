@@ -3,7 +3,7 @@
     <form action="#">
     <table>
       <tbody>
-        <tr><th colspan="2"><p>Cotización: Persona natural</p></th></tr>
+        <tr><th colspan="2"><p>Cotización: {{vpersona}}</p></th></tr>
         <tr>
           <th>Cliente</th>
           <td>{{cotiza.cliente}}</td>
@@ -22,7 +22,7 @@
         </tr>
         <tr>
           <th>Impuestos</th>
-          <td>{{cotiza.impuestos}}</td>
+          <td>{{cotiza.impuesto}}</td>
         </tr>
         <tr>
           <th>Comisión</th>
@@ -30,7 +30,7 @@
         </tr>
         <tr>
           <th>Descuentos</th>
-          <td>{{cotiza.descuentos}}</td>
+          <td>{{cotiza.descuento}}</td>
         </tr>
         <tr>
           <th>Administración</th>
@@ -117,6 +117,11 @@ export default {
   mounted() {
     document.title = "Cotización de inmueble";
     this.cotiza = CotizaService.obtenerTemporal();
+    if(this.cotiza.impuesto > 0){
+      this.vpersona = "Persona Juridica"
+    }else{
+      this.vpersona = "Persona Natural"
+    }
     console.log("Cotizacion: "+this.cotiza);
  //   if(cotiza.cliente!=null){ //  localStorage.cliente
  //   }else{

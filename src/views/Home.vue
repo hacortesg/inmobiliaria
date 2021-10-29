@@ -141,7 +141,7 @@ export default {
 //    this.tarifa = CotizaService.obtenerTarifa();
 //    this.listaUsuario = 
     CotizaService.obtenerTarifa().then((respuesta)=>{
-      this.tarifa = respuesta.data;
+      this.listaTarifa = respuesta.data;
     });
 //    this.vestado = UsuarioService.obtenerIngresado();
     if (localStorage.cliente!=null){
@@ -166,10 +166,10 @@ export default {
       listaDisponible: [],
       listaSugerido: [],
       listaUsuario: [],
+      listaTarifa: [],
       vestado: [],
       cotiza:{},
       actual: {},
-      tarifa: [],
       encontrado:{
         id:0,
         img:'',
@@ -181,16 +181,16 @@ export default {
         localidad:'',
         estrato: '',
         tipo: '',
-        sala:'',
-        comedor:'',
-        cocina:'',
-        parqueadero:'',
+        sala: false,
+        comedor: false,
+        cocina: false,
+        parqueadero: false,
+        amoblado: false,
         bano: 0,
         alcoba:0,
         preciox: 0,
-        amoblado:'',
         servicio: 0,
-        anticipo: '',
+        anticipo: false,
         persona:0
       },
       vciudad: '',
@@ -198,16 +198,16 @@ export default {
       vlocalidad: '',
       vestrato: '',
       vtipo: '',
-      vsala:'',
-      vcomedor:'',
-      vcocina:'',
-      vparqueadero:'',
+      vsala: false,
+      vcomedor: false,
+      vcocina: false,
+      vparqueadero: false,
+      vamoblado: false,
       vbano:0,
       valcoba:0,
       vpreciox:0,
-      vamoblado:'',
       vservicio: '',
-      vanticipo:'',
+      vanticipo: false,
       vpersona: 0,
       vbuscar: true
     }
@@ -245,7 +245,7 @@ export default {
       this.buscado.servicio = parseInt(this.vservicio);
       this.buscado.anticipo = this.vanticipo;
       this.buscado.persona = this.vpersona;
-      console.log(this.buscado);
+//      console.log(this.buscado);
       
 //      for(let j = 0; j < this.listaDisponible.length; j++){
       for(let reg of this.listaDisponible){
@@ -261,20 +261,21 @@ export default {
             this.encontrado.direccion = reg.direccion;
             this.listaSugerido.push(this.encontrado);
             this.encontrado = {id:0, img:'', direccion: ''};
-            console.log('match -> ' + this.listaSugerido[0].img);
+//            console.log('match -> ' + this.listaSugerido[0].img);
         }
-            console.log(reg);
+//            console.log(reg);
       }
       if(this.listaSugerido.length>0){
       this.vbuscar = false;
       }
     },
     cotizar(pos){
-      console.log("cliente "+this.actual);
+      console.log(this.buscado);
+      console.log(this.actual);
       console.log(localStorage.cliente);
       //if(this.vestado[0]>=0){
-      if(this.actual!=null){ //localStorage.cliente
-
+      if(localStorage.cliente!=null){ //this.actual 
+        this.cotiza.id = localStorage.cliente;
         let nombre = this.actual.nombre;
         let apellido = this.actual.apellido;
         let documento = this.actual.documento;
@@ -283,46 +284,65 @@ export default {
       let total = 0;
       let canon = this.listaDisponible[pos].preciox;
       this.cotiza.canon = canon.toFixed(1);
-      total = canon;
+      total = parseInt(canon);
+      // ******* Servicio ********
+      let posServicio = this.buscado.servicio;
+      if(this.buscado.servicio==''){
+        posServicio = 0;
+      }else{
+        posServicio--;
+      }
+      let servicio = this.listaServicio[posServicio].precio;
+      this.cotiza.servicio = this.listaServicio[posServicio].nombre +' $'+servicio;
+      total += parseInt(servicio);
+// ********* Impuesto **********
+      let posIva = this.buscado.persona;
+      console.log(this.buscado.persona);
+      let datoComision = 0;
+      if(posIva==1){
+        let iva = this.listaTarifa[posIva].porcien;
+        let datoMas = this.listaTarifa[posIva].mas;
+        console.log(datoMas);
+        let datoIva = canon * iva;
+        datoComision = canon * datoMas;
+//        this.cotiza.comision = parseInt(datoComision);
+        total += parseInt(datoComision);
+        datoIva += datoComision * iva;
+        this.cotiza.impuesto = datoIva.toFixed(1);
+        total += parseInt(datoIva);
+      }
+// ********* Comision Administracion *********
       let tipoI = this.listaDisponible[pos].tipo;
-      console.log("tipo: "+tipoI);
-      for(let t in this.listaTipo){
-        if(t.id ==tipoI){
-          this.cotiza.tipo = t.nombre;
-          let comision = canon * t.comision;
-          this.cotiza.comision = comision.toFixed(1);
-          total += comision;
-          let admon = canon * t.administracion;
+//      for(let t in this.listaTipo){
+//        if(t.id ==tipoI){
+          this.cotiza.tipo = this.listaTipo[tipoI-1].nombre;
+          let comision = canon * this.listaTipo[tipoI-1].comision;
+          datoComision += comision;
+          this.cotiza.comision = datoComision.toFixed(1);
+          total += parseInt(comision);
+          let admon = canon * this.listaTipo[tipoI-1].administracion;
           this.cotiza.admon = admon.toFixed(1);
-          total += admon;
-        }
-      }
-      let servicio = this.listaServicio[this.buscado.servicio].precio;
-      this.cotiza.servicio = this.listaServicio[this.buscado.servicio].nombre +' $'+servicio;
-      total += servicio;
-
-      if(this.vpersona==1){
-        let iva = this.tarifa[this.vpersona].porcien;
-        let dato = canon * iva;
-        dato += (canon * this.tarifa[this.vpersona].mas)* iva;
-        this.cotiza.impuestos = dato.toFixed(1);
-        total += dato;
-      }
-      if (this.vanticipo){
-        let anticipo = canon * 0.1;
-        this.cotiza.descuentos = anticipo.toFixed(1);
-        total -= this.cotiza.descuentos;
-        total += canon * 11;
+          total += parseInt(admon);
+//        }
+//      }
+// ********* Descuento por anticipo *********
+      console.log(this.buscado.anticipo);
+      if (this.buscado.anticipo){
+        let datoAnticipo = 12 * canon * 0.1;
+        this.cotiza.descuento = parseInt(datoAnticipo).toFixed(1);
+        total += parseInt(canon * 11);
+        total -= parseInt(datoAnticipo);
       }
 //      if(tipoI >= 0 || tipoI <= 3){
 //        let admon = canon * this.tipo
 //      }
-      if(this.vamoblado){
+// ********* Incremento por Amoblado *******
+      if(this.buscado.amoblado){
         let amoblado = canon * 0.12;
         this.cotiza.amoblado = amoblado.toFixed(1);
-        total += amoblado;
+        total += parseInt(amoblado);
      }
-      this.cotiza.total = total.toFixed(1);
+      this.cotiza.total = parseInt(total).toFixed(1);
       CotizaService.guardaTemporal(this.cotiza);
       //console.log(this.cotiza);
       this.vbuscar = true;
@@ -350,10 +370,10 @@ export default {
         zona:'',
         localidad:'',
         estrato: '',
-        sala: 0,
-        comedor: 0,
-        cocina: 0,
-        parqueadero: 0,
+        sala: false,
+        comedor: false,
+        cocina: false,
+        parqueadero: false,
         amoblado:false,
         bano: 0,
         alcoba:0,

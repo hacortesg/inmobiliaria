@@ -11,13 +11,15 @@ class CotizaService {
     constructor() {
 
         this.cotizacion = {
+            id: '',
             cliente: '',
+            inmueble: '',
             tipo: '',
             canon: 0,
             servicio: 0,
-            impuestos: 0,
+            impuesto: 0,
             comision: 0,
-            descuentos: 0,
+            descuento: 0,
             admon: 0,
             amoblado: 0,
             total: 0
