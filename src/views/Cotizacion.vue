@@ -6,11 +6,11 @@
         <tr><th colspan="2"><p>Cotización: {{vpersona}}</p></th></tr>
         <tr>
           <th>Cliente</th>
-          <td>{{cotiza.cliente}}</td>
+          <td>{{cotiza.userCliente}}</td>
         </tr>
         <tr>
           <th>Inmueble</th>
-          <td>{{cotiza.tipo}}</td>
+          <td>{{cotiza.nombreTipo}}</td>
         </tr>
         <tr>
           <th>Canon</th>
@@ -18,7 +18,7 @@
         </tr>
         <tr>
           <th>Servicio</th>
-          <td>{{cotiza.servicio}}</td>
+          <td>{{cotiza.nombreServicio}}</td>
         </tr>
         <tr>
           <th>Impuestos</th>
@@ -34,7 +34,7 @@
         </tr>
         <tr>
           <th>Administración</th>
-          <td>{{cotiza.admon}}</td>
+          <td>{{cotiza.administracion}}</td>
         </tr>
         <tr>
           <th>Amoblado</th>
@@ -43,6 +43,10 @@
         <tr>
           <th>Total</th>
           <td>{{cotiza.total}}</td>
+        </tr>
+        <tr v-if="vregistrado">
+          <th>¡¡Datos Registrados!!</th>
+          <td><button @click.prevent="listo">Cerrar</button></td>
         </tr>
         <tr>
           <td align="center"><button  @click.prevent="depositoOff">Pago en efectivo</button></td>
@@ -122,7 +126,7 @@ export default {
     }else{
       this.vpersona = "Persona Natural"
     }
-    console.log("Cotizacion: "+this.cotiza);
+    console.log(this.cotiza);
  //   if(cotiza.cliente!=null){ //  localStorage.cliente
  //   }else{
  //     CotizaService.obtenenerCotizacion().then((respuesta)=>{
@@ -134,7 +138,9 @@ export default {
     return {
       cotiza: {},
       vpagoOff: false,
-      vpagoOn: false
+      vpagoOn: false,
+      vpersona: '',
+      vregistrado: false
     };
   },
   name: 'Cotizacion',
@@ -144,9 +150,35 @@ export default {
   methods: {
     depositoOff(){
       this.vpagoOff = true;
-      if(localStorage.cliente==null){
-        CotizaService.registraCotizacion(this.cotiza).then((respuesta)=>{
-          console.log(respuesta.data);
+      if(localStorage.cliente!=null){
+        CotizaService.obtenerCotizacion().then((respuestaCotizacion)=>{
+
+        if(respuestaCotizacion.data==null){
+          CotizaService.registrarCotizacion(this.cotiza.cliente, this.cotiza.inmueble, 
+          this.cotiza.tipo, this.cotiza.servicio, 
+          parseInt(this.cotiza.canon), parseInt(this.cotiza.impuesto), 
+          parseInt(this.cotiza.comision), parseInt(this.cotiza.descuento), 
+          parseInt(this.cotiza.administracion), parseInt(this.cotiza.amoblado)).then((respuestaPrimer)=>{
+          console.log(respuestaPrimer.data);
+          
+          if(respuestaPrimer.data != null){
+            this.vregistrado = true;
+          }
+          });
+
+          }else{
+            CotizaService.modificarCotizacion(this.cotiza.id, this.cotiza.cliente, this.cotiza.inmueble, 
+            this.cotiza.tipo, this.cotiza.servicio, 
+            parseInt(this.cotiza.canon), parseInt(this.cotiza.impuesto), 
+            parseInt(this.cotiza.comision), parseInt(this.cotiza.descuento), 
+            parseInt(this.cotiza.administracion), parseInt(this.cotiza.amoblado)).then((respuestaModifica)=>{
+            console.log(respuestaModifica.data);
+          
+            if(respuestaModifica.data != null){
+              this.vregistrado = true;
+            }
+            });
+          }
         });
       }
 //      alert(`Estimad@ cliente: ${this.cotiza.cliente} Por favor realice su deposito en Oficina Banco DaCasa: 212055950`);
@@ -154,7 +186,7 @@ export default {
     depositoOn(){
       this.vpagoOn = true;
       if(localStorage.cliente==null){
-        CotizaService.registraCotizacion(this.cotiza).then((respuesta)=>{
+        CotizaService.registrarCotizacion(this.cotiza).then((respuesta)=>{
           console.log(respuesta.data);
         });
       }
@@ -165,6 +197,9 @@ export default {
     },
     listoOn(){
       this.vpagoOn = false;
+    },
+    listo(){
+      this.vregistrado = false;
     }
   },
 };

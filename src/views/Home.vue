@@ -87,7 +87,7 @@
   </template>
 
 <script>
-//import {ref} from "veu";
+
 import SitioService from '@/services/obsitio.js';
 import InmuebleService from '@/services/obinmueble.js';
 import CotizaService from '@/services/obcotiza.js';
@@ -144,15 +144,18 @@ export default {
       this.listaTarifa = respuesta.data;
     });
 //    this.vestado = UsuarioService.obtenerIngresado();
-    if (localStorage.cliente!=null){
-      UsuarioService.obtenerById().then((respuesta)=>{
+    this.miId= parseInt(localStorage.cliente);
+    if (this.miId!=null){
+      UsuarioService.obtenerById(this.miId).then((respuesta)=>{
         if(respuesta.data.id!=null){
-          this.actual = respuesta.data;
-          console.log("cliente: " + this.actual);
+          this.actual.documento = respuesta.data.documento;
+          this.actual.nombre = respuesta.data.nombre;
+          this.actual.apellido = respuesta.data.apellido;
         }
     });
-
+//      this.actual = UsuarioService.obtenerActual();
     }
+          console.log(localStorage.cliente);
   },
   data(){
     return{
@@ -170,6 +173,7 @@ export default {
       vestado: [],
       cotiza:{},
       actual: {},
+      miId: 0,
       encontrado:{
         id:0,
         img:'',
@@ -218,6 +222,9 @@ export default {
   },
   methods: {
     buscar(){
+      console.log("LOCAL Storage=> ");
+      console.log(localStorage.cliente);
+
       this.buscado.ciudad = parseInt(this.vciudad);
       this.buscado.zona = parseInt(this.vzona);
       this.buscado.localidad = parseInt(this.vlocalidad);
@@ -271,29 +278,31 @@ export default {
     },
     cotizar(pos){
       console.log(this.buscado);
-      console.log(this.actual);
+      console.log("LOCAL Storage=> ");
       console.log(localStorage.cliente);
       //if(this.vestado[0]>=0){
       if(localStorage.cliente!=null){ //this.actual 
-        this.cotiza.id = localStorage.cliente;
+        this.cotiza.cliente = parseInt(localStorage.cliente);
         let nombre = this.actual.nombre;
         let apellido = this.actual.apellido;
         let documento = this.actual.documento;
-        this.cotiza.cliente = nombre + ' '+ apellido + ' ('+ documento + ')';
+        this.cotiza.userCliente = nombre + ' '+ apellido + ' ('+ documento + ')';
       };
       let total = 0;
+      this.cotiza.inmueble = this.listaDisponible[pos].id; 
       let canon = this.listaDisponible[pos].preciox;
       this.cotiza.canon = canon.toFixed(1);
       total = parseInt(canon);
-      // ******* Servicio ********
+// ******* Servicio ********
       let posServicio = this.buscado.servicio;
       if(this.buscado.servicio==''){
         posServicio = 0;
       }else{
         posServicio--;
       }
+      this.cotiza.servicio = posServicio + 1;
       let servicio = this.listaServicio[posServicio].precio;
-      this.cotiza.servicio = this.listaServicio[posServicio].nombre +' $'+servicio;
+      this.cotiza.nombreServicio = this.listaServicio[posServicio].nombre +' $'+servicio;
       total += parseInt(servicio);
 // ********* Impuesto **********
       let posIva = this.buscado.persona;
@@ -313,15 +322,16 @@ export default {
       }
 // ********* Comision Administracion *********
       let tipoI = this.listaDisponible[pos].tipo;
+      this.cotiza.tipo = tipoI;
 //      for(let t in this.listaTipo){
 //        if(t.id ==tipoI){
-          this.cotiza.tipo = this.listaTipo[tipoI-1].nombre;
+          this.cotiza.nombreTipo = this.listaTipo[tipoI-1].nombre;
           let comision = canon * this.listaTipo[tipoI-1].comision;
           datoComision += comision;
           this.cotiza.comision = datoComision.toFixed(1);
           total += parseInt(comision);
           let admon = canon * this.listaTipo[tipoI-1].administracion;
-          this.cotiza.admon = admon.toFixed(1);
+          this.cotiza.administracion = admon.toFixed(1);
           total += parseInt(admon);
 //        }
 //      }
@@ -343,7 +353,7 @@ export default {
         total += parseInt(amoblado);
      }
       this.cotiza.total = parseInt(total).toFixed(1);
-      CotizaService.guardaTemporal(this.cotiza);
+      CotizaService.guardarTemporal(this.cotiza);
       //console.log(this.cotiza);
       this.vbuscar = true;
       this.$router.push('/cotizacion');

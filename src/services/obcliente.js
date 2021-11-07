@@ -32,37 +32,43 @@ constructor(){
         }
     ];
 
-    this.ingresado = [-1];
+    this.ingresado = [];
 };
 
-obtenerById(){
-    let mid = localStorage.cliente;
-    return axios.post(`${this.url}/cliente/${mid}`);
+obtenerById(mId){
+    //let mid = localStorage.cliente;
+    return axios.get(`${this.url}/cliente/${mId}`);
 };
 
-obtenerUsuarios(){
-    return axios.get(`${this.url}/cliente/`);
-//    return this.usuario;
+ponerActual(mNombre, mApellido, mDocumento){
+//    return axios.get(`${this.url}/cliente/`);
+    let dato = {nombre: mNombre, apellido: mApellido, docuemto: mDocumento};
+    return this.actual = dato;
 };
+
+obtenerActual(){
+    return this.actual;
+};
+
 
 obtenerIngresado(){
     return this.ingresado;
 };
 
-validar(muser, mpass){
-    let datos = {usuario: muser, password: mpass};
+validar(mUser, mPass){
+    let datos = {usuario: mUser, password: mPass};
     return axios.post(`${this.url}/cliente/validar/`, datos);
 };
 
-registrar(mdocumento, mnombre, mapellido, muser, mpass, mtel, memail){
+registrar(mDocumento, mNombre, mApellido, mUser, mPass, mTel, mEmail){
     let miUser = {
-        documento: mdocumento, 
-        nombre: mnombre, 
-        apellido: mapellido, 
-        usuario: muser, 
-        password: mpass, 
-        telefono: mtel, 
-        email: memail};
+        documento: mDocumento, 
+        nombre: mNombre, 
+        apellido: mApellido, 
+        usuario: mUser, 
+        password: mPass, 
+        telefono: mTel, 
+        email: mEmail};
     return axios.post(`${this.url}/cliente/`, miUser);
 };
 

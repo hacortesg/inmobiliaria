@@ -69,6 +69,8 @@
 
 <script>
 import UsuarioService from '@/services/obcliente.js';
+import CotizaService from '@/services/obcotiza.js';
+import InmuebleService from '@/services/obinmueble.js';
 
 export default {
   mounted(){
@@ -76,14 +78,28 @@ export default {
     document.title = 'Ingreso de Usuario';
 //    this.listaUsuario = UsuarioService.obtenerUsuarios();
 //    this.vestado = UsuarioService.obtenerIngresado();
-  },
+    InmuebleService.obtenerTipo().then((respuesta)=>{
+      if(respuesta.data!=null){
+        this.listaTipo = respuesta.data;
+      }
+    });
+    InmuebleService.obtenerServicio().then((respuesta)=>{
+      if(respuesta.data!=null){
+        this.listaServicio = respuesta.data;
+      }
+    });
+ 
+ },
   data(){
     return{
       listaUsuario: [],
+      listaTipo: [],
+      listaServicio: [],
       vusuario: "",
       vpassword: "",
       vestado: [],
-      dusuario:{},
+      duser:{},
+      cotiza: {},
       verror:false
     }
   },
@@ -101,9 +117,37 @@ export default {
         // sessionStorage
           // para la pagina console.lot(respuesta.data.id)
           localStorage.cliente = respuesta.data.id;
-          console.log(localStorage.cliente);
+//          console.log(localStorage.cliente);
+          this.duser = respuesta.data;
+//          UsuarioService.pornerActual(this.duser.nombre, this.duser.apellido, this.duser.documento);
+          console.log(respuesta.data);
 //          UsuarioService.setUsuario(respuesta.data);
-          this.$router.push({name:"Home"});
+          CotizaService.obtenerCotizacion().then((respuesta)=>{
+            if(respuesta.data!=null){
+              this.cotiza = respuesta.data[0];
+              console.log(this.cotiza);
+              let total = this.cotiza.canon;
+              total += this.cotiza.impuesto;
+              total += this.cotiza.comision;
+              total += this.cotiza.administracion;
+              total += this.cotiza.amoblado;
+              this.cotiza.userCliente = this.duser.nombre + ' ' + this.duser.apellido + ' ('+ this.duser.documento+')';
+              let indice = 0;
+              indice = parseInt(this.cotiza.tipo) - 1;
+              this.cotiza['nombreTipo'] =  this.listaTipo[indice].nombre;
+              indice = parseInt(this.cotiza.servicio) - 1;
+              let precioServicio = this.listaServicio[indice].precio;
+              this.cotiza['nombreServicio'] = this.listaServicio[indice].nombre +' $' + precioServicio;
+              total += precioServicio;
+              console.log(total);
+              total -= this.cotiza.descuento;
+              this.cotiza['total'] = total;
+              CotizaService.guardarTemporal(this.cotiza);
+              this.$router.push({name:"Cotizacion"});
+            }else{
+              this.$router.push({name:"Home"});
+            }
+          });
         }
         else{
           this.verror = true;

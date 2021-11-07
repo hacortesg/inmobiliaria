@@ -25,7 +25,7 @@
         </tr>
         <tr v-if="vregistrado">
           <td colspan="2" align="center">
-          <p>¡¡Datos Registrados!!</p>
+          <p>¡¡Datos Registrados!! {{vmensaje}}</p>
             <button @click.prevent="listo">Cerrar</button> </td>
         </tr>
       </table>
@@ -88,6 +88,7 @@ import UsuarioService from "@/services/obcliente.js";
         vtelefono: "",
         vemail: "",
         vregistrado: false,
+        vmensaje: '',
         registro: {
           documento:"",
           nombre: "",
@@ -105,13 +106,13 @@ import UsuarioService from "@/services/obcliente.js";
     },
     methods:{
       registrar(){
-        this.registro.documento = this.vdocumento;
-        this.registro.nombre = this.vnombre;
-        this.registro.apellido = this.vapellido;
-        this.registro.usuario = this.vusuario;
-        this.registro.password = this.vpassword;
-        this.registro.telefono = this.vtelefono;
-        this.registro.email = this.vemail;
+//        this.registro.documento = this.vdocumento;
+//        this.registro.nombre = this.vnombre;
+//        this.registro.apellido = this.vapellido;
+//        this.registro.usuario = this.vusuario;
+//        this.registro.password = this.vpassword;
+//        this.registro.telefono = this.vtelefono;
+//        this.registro.email = this.vemail;
         let mdocumento = this.vdocumento;
         let mnombre = this.vnombre;
         let mapellido = this.vapellido;
@@ -120,12 +121,13 @@ import UsuarioService from "@/services/obcliente.js";
         let mtel = this.vtelefono;
         let memail = this.vemail;
 
-        console.log(this.registro)
+//        console.log(this.registro)
 //        this.listaUsuarios.push(mdocumento, mnombre, mapellido, muser, mpass, mtel, memail);
         UsuarioService.registrar(mdocumento, mnombre, mapellido, muser, mpass, mtel, memail).then(
           (respuesta)=>{
           console.log(respuesta.data);
           this.vregistrado = true;
+          this.vmensaje = mnombre;
         });
         //this.vregistrado = true;
         this.clear();

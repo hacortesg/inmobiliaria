@@ -105,17 +105,23 @@ class InmuebleService {
     };
 
     obtenerTipo() {
-        return axios.get(`${this.url}/tipo/todos`)
+        return axios.get(`${this.url}/tipo/todos`);
 //        return this.tipo;
     };
 
     obtenerServicio() {
-        return axios.get(`${this.url}/servicio/todos`)
+        return axios.get(`${this.url}/servicio/todos`);
 //        return this.servicio;
     };
 
     obtenerInmueble() {
-        return axios.get(`${this.url}/inmueble/todos`)
+        return axios.get(`${this.url}/inmueble/todos`);
+//        return this.disponible;
+    }
+
+    modificarInmueble(miId) {
+        let datos = {id: miId};
+        return axios.post(`${this.url}/inmueble/`, datos);
 //        return this.disponible;
     }
 

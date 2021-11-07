@@ -11,16 +11,20 @@ class CotizaService {
     constructor() {
 
         this.cotizacion = {
-            id: '',
-            cliente: '',
-            inmueble: '',
-            tipo: '',
+            id: 0,
+            cliente: 0,
+            userCliente: '',
+            direccionInmueble: 0,
+            inmueble: 0,
+            tipo: 0,
+            nombreTipo: '',
             canon: 0,
+            nombreServicio: '',
             servicio: 0,
             impuesto: 0,
             comision: 0,
             descuento: 0,
-            admon: 0,
+            administracion: 0,
             amoblado: 0,
             total: 0
         };
@@ -46,19 +50,31 @@ class CotizaService {
     };
 
     obtenerCotizacion() {
-        let mId = localStorage.cliente;
-        return axios.get(`${this.url}/cotizacion/${mId}`);
+        let miId = localStorage.cliente;
+        return axios.get(`${this.url}/cotizacion/cliente/${miId}`);
     }
 
     obtenerTarifa() {
         return axios.get(`${this.url}/impuesto/todos`);
 //        return this.tarifa;
     };
-    registrarCotizacion(miCotizacion){
-        return axios.post(`${this.url}/cotizacion/${miCotizacion}`);
+    registrarCotizacion(miCliente, miInmueble, miTipo, miServicio, miCanon, miImpuesto,
+        miComision, miDescuento, miAdministracion, miAmoblado){
+        let datos = {cliente: miCliente, inmueble: miInmueble, tipo: miTipo, canon: miCanon, 
+            servicio: miServicio, impuesto: miImpuesto, comision: miComision, 
+            descuento: miDescuento, administracion: miAdministracion, amoblado: miAmoblado};
+        return axios.post(`${this.url}/cotizacion/`, datos);
     };
 
-    guardaTemporal(mCotiza){
+    modificarCotizacion(miId, miCliente, miInmueble, miTipo, miServicio, miCanon, miImpuesto,
+        miComision, miDescuento, miAdministracion, miAmoblado){
+        let datos = {id: miId, cliente: miCliente, inmueble: miInmueble, tipo: miTipo,  
+            servicio: miServicio, canon: miCanon, impuesto: miImpuesto, comision: miComision, 
+            descuento: miDescuento, administracion: miAdministracion, amoblado: miAmoblado};
+        return axios.post(`${this.url}/cotizacion/`, datos);
+    };
+
+    guardarTemporal(mCotiza){
         this.cotizacion = mCotiza;
     };
 

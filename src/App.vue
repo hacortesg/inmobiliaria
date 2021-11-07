@@ -24,6 +24,8 @@
 </template>
 
 <script>
+import UsuarioService from "@/services/obcliente.js";
+
 export default {
   mounted(){
     if(localStorage.cliente!=null){
@@ -39,6 +41,7 @@ export default {
     cerrar(){
       console.log("sesion: "+localStorage.cliente);
       localStorage.clear();
+//      localStorage.cliente = null;
       this.vcerrar = false;
     }
   }
